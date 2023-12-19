@@ -5,10 +5,14 @@ on:
     branches:
       - main
 
+permissions:
+  contents: read
+  pull-requests: write
+
 jobs:
   container-push-latest:
     uses: metal-toolbox/container-push/.github/workflows/container-push.yml@main
     with:
-      name: yaml-toolbox
+      name: datumbase
       tag: latest
       dockerfile_path: .
