@@ -9,7 +9,7 @@ RUN go install go.uber.org/mock/mockgen@latest
 
 RUN wget -O- -nv https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s v1.55.2
 
-COPY --from=vektra/mockery:v2 /usr/local/bin/mockery /bin/mockery
+COPY --from=vektra/mockery:v3 /usr/local/bin/mockery /bin/mockery
 
 COPY --from=hairyhenderson/gomplate:stable /gomplate /bin/gomplate
 
