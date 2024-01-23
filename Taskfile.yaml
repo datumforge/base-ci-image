@@ -1,0 +1,7 @@
+version: '3'
+
+tasks:
+  build:
+    desc: builds the base-ci docker image
+    cmds:
+      - docker build -f Dockerfile .
