@@ -1,0 +1,58 @@
+env:
+  APP_NAME: ${BUILDKITE_PIPELINE_SLUG}
+  IMAGE_REPO: ghcr.io/datumforge/${APP_NAME}
+  IMAGE_TAG: ${BUILDKITE_BUILD_NUMBER}-${BUILDKITE_COMMIT:0:8}
+
+steps:
+- group: ":docker: Image Build"
+  depends_on: "go-builds"
+  key: "image-build"
+  steps:
+  - label: ":docker: docker pr build"
+    key: "docker-pr-build"
+    if: build.branch != "main"
+    commands: |
+      #!/bin/bash
+      ls
+    plugins:
+      - equinixmetal-buildkite/docker-metadata#v1.0.0:
+          images:
+          - "${IMAGE_REPO}"
+          extra_tags:
+          - "${IMAGE_TAG}"
+      - equinixmetal-buildkite/docker-build#v1.1.0:
+          dockerfile: docker/Dockerfile
+          push: false
+          build-args:
+            - NAME=${APP_NAME}
+      - equinixmetal-buildkite/trivy#v1.18.3:
+          severity: CRITICAL,HIGH
+          ignore-unfixed: true
+          security-checks: config,secret,vuln
+          skip-files: 'cosign.key,Dockerfile.dev'
+  - label: ":docker: docker build and publish"
+    key: "docker-build"
+    if: build.branch == "main"
+    commands: |
+      #!/bin/bash
+      ls
+    plugins:
+      - docker-login#v3.0.0:
+          username: datum-bender
+          password-env: SECRET_GHCR_PUBLISH_TOKEN
+          server: ghcr.io
+      - equinixmetal-buildkite/docker-metadata#v1.0.0:
+          images:
+          - "${IMAGE_REPO}"
+          extra_tags:
+          - "${IMAGE_TAG}"
+      - equinixmetal-buildkite/docker-build#v1.1.0:
+          dockerfile: docker/Dockerfile
+          push: true
+          build-args:
+            - NAME=${APP_NAME}
+      - equinixmetal-buildkite/trivy#v1.18.3:
+          severity: CRITICAL,HIGH
+          ignore-unfixed: true
+          security-checks: config,secret,vuln
+          skip-files: 'cosign.key,Dockerfile.dev'
