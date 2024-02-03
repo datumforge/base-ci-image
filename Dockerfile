@@ -1,6 +1,6 @@
 FROM golang:1.21.6-alpine
 
-RUN apk add git
+RUN apk add git --no-cache
 RUN go install github.com/go-task/task/v3/cmd/task@latest
 RUN go install entgo.io/ent/cmd/ent@latest
 
@@ -11,3 +11,5 @@ COPY --from=vektra/mockery:v2 /usr/local/bin/mockery /bin/mockery
 COPY --from=hairyhenderson/gomplate:stable /gomplate /bin/gomplate
 
 COPY . .
+
+USER 65532:65532
