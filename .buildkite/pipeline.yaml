@@ -5,7 +5,6 @@ env:
 
 steps:
 - group: ":docker: Image Build"
-  depends_on: "go-builds"
   key: "image-build"
   steps:
   - label: ":docker: docker pr build"
@@ -21,7 +20,7 @@ steps:
           extra_tags:
           - "${IMAGE_TAG}"
       - equinixmetal-buildkite/docker-build#v1.1.0:
-          dockerfile: docker/Dockerfile
+          dockerfile: Dockerfile
           push: false
           build-args:
             - NAME=${APP_NAME}
@@ -29,7 +28,7 @@ steps:
           severity: CRITICAL,HIGH
           ignore-unfixed: true
           security-checks: config,secret,vuln
-          skip-files: 'cosign.key,Dockerfile.dev'
+          skip-files: 'cosign.key'
   - label: ":docker: docker build and publish"
     key: "docker-build"
     if: build.branch == "main"
@@ -47,7 +46,7 @@ steps:
           extra_tags:
           - "${IMAGE_TAG}"
       - equinixmetal-buildkite/docker-build#v1.1.0:
-          dockerfile: docker/Dockerfile
+          dockerfile: Dockerfile
           push: true
           build-args:
             - NAME=${APP_NAME}
@@ -55,4 +54,4 @@ steps:
           severity: CRITICAL,HIGH
           ignore-unfixed: true
           security-checks: config,secret,vuln
-          skip-files: 'cosign.key,Dockerfile.dev'
+          skip-files: 'cosign.key'
