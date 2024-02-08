@@ -11,5 +11,3 @@ COPY --from=vektra/mockery:v2 /usr/local/bin/mockery /bin/mockery
 COPY --from=hairyhenderson/gomplate:stable /gomplate /bin/gomplate
 
 COPY . .
-
-USER 65532:65532

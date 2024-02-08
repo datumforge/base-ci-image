@@ -4,4 +4,4 @@ tasks:
   build:
     desc: builds the base-ci docker image
     cmds:
-      - docker build -f Dockerfile .
+      - docker build -f Dockerfile . -t base-ci-image:dev
