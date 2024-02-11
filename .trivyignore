@@ -1,0 +1,2 @@
+# The image is used in CI and has a lot of requirements to the root dir, skip this check
+AVD-DS-0002
