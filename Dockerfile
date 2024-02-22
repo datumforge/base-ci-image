@@ -1,6 +1,6 @@
 FROM golang:1.22.0-alpine
 
-RUN apk add git --no-cache
+RUN apk add git --no-cache  && apk cache clean
 RUN go install github.com/go-task/task/v3/cmd/task@latest
 RUN go install entgo.io/ent/cmd/ent@latest
 
