@@ -56,7 +56,7 @@ steps:
           security-checks: config,secret,vuln
           skip-files: 'cosign.key'
   - label: ":docker: docker build and publish"
-    key: "docker-build"
+    key: "docker-build-and-tag"
     if: build.tag != null
     commands: |
       #!/bin/bash
