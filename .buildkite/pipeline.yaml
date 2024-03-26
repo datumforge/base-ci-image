@@ -9,7 +9,7 @@ steps:
   steps:
   - label: ":docker: docker pr build"
     key: "docker-pr-build"
-    if: build.branch != "main"
+    if: build.branch != "main" && build.tag == null
     commands: |
       #!/bin/bash
       ls
