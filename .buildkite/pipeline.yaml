@@ -14,12 +14,12 @@ steps:
       #!/bin/bash
       ls
     plugins:
-      - equinixmetal-buildkite/docker-metadata#v1.0.0:
+      - datumforge/docker-metadata#v1.0.0:
           images:
           - "${IMAGE_REPO}"
           extra_tags:
           - "${IMAGE_TAG}"
-      - equinixmetal-buildkite/docker-build#v1.1.0:
+      - datumforge/container-build#v1.1.0:
           dockerfile: Dockerfile
           push: false
           build-args:
@@ -40,14 +40,16 @@ steps:
           username: datum-bender
           password-env: SECRET_GHCR_PUBLISH_TOKEN
           server: ghcr.io
-      - equinixmetal-buildkite/docker-metadata#v1.0.0:
+      - datumforge/docker-metadata#v1.0.0:
           images:
           - "${IMAGE_REPO}"
           extra_tags:
           - "${IMAGE_TAG}"
-      - equinixmetal-buildkite/docker-build#v1.1.0:
+      - datumforge/container-build#v1.1.0:
           dockerfile: Dockerfile
           push: true
+          tags:
+            - "${BUILDKITE_TAG}"
           build-args:
             - NAME=${APP_NAME}
       - equinixmetal-buildkite/trivy#v1.18.5:
