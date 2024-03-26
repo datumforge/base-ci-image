@@ -48,6 +48,33 @@ steps:
       - datumforge/container-build#v1.1.0:
           dockerfile: Dockerfile
           push: true
+          build-args:
+            - NAME=${APP_NAME}
+      - equinixmetal-buildkite/trivy#v1.18.5:
+          severity: CRITICAL,HIGH
+          ignore-unfixed: true
+          security-checks: config,secret,vuln
+          skip-files: 'cosign.key'
+  - label: ":docker: docker build and publish"
+    key: "docker-build"
+    if: build.tag != null
+    commands: |
+      #!/bin/bash
+      ls
+    plugins:
+      - docker-login#v3.0.0:
+          username: datum-bender
+          password-env: SECRET_GHCR_PUBLISH_TOKEN
+          server: ghcr.io
+      - datumforge/docker-metadata#v1.0.0:
+          images:
+          - "${IMAGE_REPO}"
+          extra_tags:
+          - "${IMAGE_TAG}"
+          - "${BUILDKITE_TAG}"
+      - datumforge/container-build#v1.1.0:
+          dockerfile: Dockerfile
+          push: true
           tags:
             - "${BUILDKITE_TAG}"
           build-args:
